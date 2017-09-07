@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Recipe extends Model
 {
-    protected $appends = ['ingredients_recipe'];
+    protected $appends = ['ingredients'];
 
     public function ingredientsRecipe() 
     {
@@ -19,7 +19,7 @@ class Recipe extends Model
      *
      * @return void ingredient object
      */
-    public function getIngredientsRecipeAttribute()
+    public function getIngredientsAttribute()
     {
         return $this->ingredientsRecipe()->get();
     }
