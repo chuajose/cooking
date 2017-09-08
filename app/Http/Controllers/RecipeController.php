@@ -5,17 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Services\Recipes\RecipeService;
+use App\Http\Requests\Recipes\StoreRecipe;
 
 class RecipeController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('jwt.auth')->only('store');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $recipe = new RecipeService();
+        $data = $recipe->listRecipes($request);
+        return response()->json($data);
     }
 
     /**
@@ -34,7 +41,7 @@ class RecipeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRecipe $request)
     {
         $recipe = new RecipeService();
         $data = $recipe->createRecipe($request);

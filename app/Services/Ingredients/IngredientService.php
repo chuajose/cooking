@@ -24,6 +24,19 @@ class IngredientService
     private $ingredient = false;
 
     /**
+     * List ingredient
+     *
+     * @param object $request data of ingredient
+     * 
+     * @return void
+     */
+    function listIngredients($request)
+    {
+        $list = Ingredient::GetByQuery($request)->paginate(20);
+        return $list;
+    }
+
+    /**
      * Create new ingredient
      *
      * @param string $name name of ingredient
@@ -34,7 +47,40 @@ class IngredientService
     {
         $this->ingredient = new Ingredient;
         $this->ingredient->name = $name;
-        $this->ingredient->save();
-        return $this;
+        if (!$this->ingredient->save()) {
+            return false;
+        }
+        return $this->ingredient;
+    }
+
+    /**
+     * Get ingredient
+     *
+     * @param integer $uid unique id ingredient
+     * 
+     * @return void
+     */
+    function getIngredient($uid)
+    {
+        $this->ingredient = Ingredient::find($uid);
+        return $this->ingredient;
+    }
+
+    /**
+     * Check if ingredient exist
+     *
+     * @param string $ingredient name ingredient
+     * 
+     * @return void
+     */
+    function checkIfExistIngredient($ingredient) 
+    {
+        $this->ingredient = Ingredient::where('name', $ingredient)->first();
+
+        if (!$this->ingredient) {
+            return false;
+        }
+        return $this->ingredient;
+
     }
 }

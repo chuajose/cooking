@@ -19,8 +19,9 @@ Route::get('refreshToken', 'Auth\LoginApiController@refreshToken');
 Route::group(
     ['middleware' => ['jwt.auth']], function () {
 
-        Route::resource('recipes', 'RecipeController');
+        
         Route::resource('ingredients', 'IngredientController');
         
     }
 );
+Route::resource('recipes', 'RecipeController');

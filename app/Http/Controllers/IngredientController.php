@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\Ingredients\IngredientService;
+use App\Http\Requests\Ingredients\StoreIngredient;
 
 class IngredientController extends Controller
 {
@@ -11,9 +13,10 @@ class IngredientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $ingredient = new IngredientService;
+        return response()->json($ingredient->listIngredients($request));
     }
 
     /**
@@ -32,9 +35,11 @@ class IngredientController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreIngredient $request)
     {
-        //
+        $ingredient = new IngredientService;
+        $data = $ingredient->createIngredient($request->input('name'));
+        return response()->json(['create' => $data]);
     }
 
     /**
@@ -43,9 +48,10 @@ class IngredientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($uid)
     {
-        //
+        $ingredient = new IngredientService;
+        return response()->json($ingredient->getIngredient($uid));
     }
 
     /**

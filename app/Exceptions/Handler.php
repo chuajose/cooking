@@ -36,6 +36,16 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+
+        if ($exception instanceof \Illuminate\Validation\ValidationException) {
+            /*$this->detail = $validator->messages();
+            $error = config(sprintf('errors.%s', $this->id));
+    
+            $this->title  = $error['title'];*/
+            
+            
+            dd($exception->validator->messages());
+        }
         parent::report($exception);
     }
 
