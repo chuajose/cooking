@@ -10,6 +10,8 @@ class IngredientController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * 
+     * @param \Illuminate\Http\Request $request object request
      *
      * @return \Illuminate\Http\Response
      */
@@ -32,7 +34,8 @@ class IngredientController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request object request
+     * 
      * @return \Illuminate\Http\Response
      */
     public function store(StoreIngredient $request)
@@ -45,7 +48,8 @@ class IngredientController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $uid unique id resource
+     * 
      * @return \Illuminate\Http\Response
      */
     public function show($uid)
@@ -57,7 +61,8 @@ class IngredientController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id unique id object
+     * 
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -68,8 +73,9 @@ class IngredientController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request request to update
+     * @param int                      $id      unique id for ingrediente
+     * 
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -80,7 +86,8 @@ class IngredientController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id unique id object
+     * 
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

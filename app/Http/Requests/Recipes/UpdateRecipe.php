@@ -3,8 +3,10 @@
 namespace App\Http\Requests\Recipes;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Request;
 
-class StoreRecipe extends FormRequest
+
+class UpdateRecipe extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +26,7 @@ class StoreRecipe extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:recipes|max:255',
+            'name' => 'required|max:255|unique:recipes,name,'.Request::segment(3),
             'description' => 'required',
             'ingredients' => 'required',
             'difficulty' => 'required',

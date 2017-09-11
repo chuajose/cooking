@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Recipe extends Model
 {
-    protected $appends = ['ingredients', 'files'];
+    protected $appends = ['ingredients', 'files', 'tags'];
+    protected $fillable = ['name', 'description', 'calories', 'difficulty', 'duration'];
 
     /**
      * Get Ingredients recipe model
@@ -51,6 +52,28 @@ class Recipe extends Model
         return $this->filesRecipes()->get();
     }
 
+    /**
+     * Get tags from model
+     *
+     * @return void ingredient object
+     */
+    public function tagsRecipes() 
+    {
+        return $this->hasMany(\App\Models\Recipes\RecipeTag::class);
+        //return $this->hasManyThrough(\App\Models\Files\File::class, \App\Models\Recipes\RecipeFile::class);
+        
+    }
+
+     /**
+     * Get files from model
+     *
+     * @return void ingredient object
+     */
+    public function getTagsAttribute()
+    {
+        //dd($this->filesRecipes->files());
+        return $this->tagsRecipes()->get();
+    }
     /**
      * Get Query
      *

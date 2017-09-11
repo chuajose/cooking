@@ -6,10 +6,14 @@ use App\Models\Recipes\Recipe;
 use App\Models\Recipes\RecipeFile;
 use App\Models\Ingredients\Ingredient;
 use App\Models\Ingredients\IngredientRecipe;
+use App\Models\Recipes\Tag;
+use App\Models\Recipes\RecipeTag;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\Ingredients\IngredientService;
+use App\Services\Tags\tagService;
+
 use App\Exceptions\NotCreateRecipeException;
 /**
  * Recipe Service
@@ -47,12 +51,21 @@ class RecipeService extends IngredientService
         $this->recipe = new Recipe;
         $this->recipe->name = $data->name;
         $this->recipe->description = $data->description;
+        $this->recipe->difficulty = $data->difficulty;
+        $this->recipe->calories = ($data->calories )? $data->calories : null;
+        $this->recipe->duration = ($data->duration )? $data->duration : null;
+        
         if (!$this->recipe->save()) {
             DB::rollBack();
             return false;
         }
         if ($data->ingredients && is_array($data->ingredients)) {
             $this->addIngredientsToRecipe($data->ingredients);
+        }
+
+
+        if ($data->tags && is_array($data->tags)) {
+            $this->addTagsToRecipe($data->tags);
         }
 
         if ($data->file) {
@@ -69,6 +82,36 @@ class RecipeService extends IngredientService
         }
         DB::commit();
         return $this;
+    }
+
+    /**
+     * Update recipe
+     *
+     * @param integer $uid  unique id to recipe
+     * @param object  $data object request to update recipe
+     * 
+     * @return void
+     */
+    function updateRecipe($uid, $request)
+    {
+        if (empty($request)) {
+            return false;
+        }
+        $fieldRecipe = ['name' , 'description', 'duration', 'difficulty', 'calories'];
+        $dataRecipe = [];
+        foreach ($request as $key => $value) {
+
+            if (in_array($key, $fieldRecipe)) {
+                $dataRecipe[$key] = $value;
+            }
+        }
+        
+        $recipe = Recipe::find($uid);
+        $recipe->fill($dataRecipe);
+        $recipe->save();
+
+        return $recipe;
+        
     }
 
     /**
@@ -142,6 +185,75 @@ class RecipeService extends IngredientService
             return false;
         }
         return $ingredient;
+
+    }
+
+
+    /**
+     * Add tags to recipe
+     *
+     * @param array $tags data tags
+     * 
+     * @return void
+     */
+    function addTagsToRecipe($tags)
+    {
+        if (is_array($tags) && !empty($tags)) {
+            foreach ($tags as $tagRecipe) {
+                
+                if (!is_numeric($tagRecipe)) {
+                    $tag = $this->addTag($tagRecipe);
+                } else {
+                    $tag = Tag::find($tagRecipe); 
+                } 
+                $tagRecipe = $tag;
+                $this->addTagToRecipe($tagRecipe);
+            }
+        }
+    }
+
+     /**
+     * Add tag to recipe
+     *
+     * @param array $tag include object tag
+     * 
+     * @return void
+     */
+    function addTagToRecipe($tag)
+    {
+       
+        $tagRecipe = new RecipeTag;
+        $tagRecipe->recipe_id = $this->recipe->id;
+        $tagRecipe->tag_id = $tag->id;
+        if (!$tagRecipe->save()) {
+            DB::rollBack();
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Add tag to database
+     *
+     * @param string $tag name ingredient
+     * 
+     * @return void
+     */
+    function addTag($tag)
+    {
+        $tagService = new tagService();
+        if ($tagExist = $tagService->checkIfExistTag($tag)) {
+            
+            return $tagExist;
+        }
+        
+        $tag = $tagService->createTag($tag);
+        if (!$tag) {
+            DB::rollBack();
+            return false;
+        }
+        return $tag;
 
     }
 

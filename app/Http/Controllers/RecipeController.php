@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Services\Recipes\RecipeService;
 use App\Http\Requests\Recipes\StoreRecipe;
+use App\Http\Requests\Recipes\UpdateRecipe;
 
 class RecipeController extends Controller
 {
@@ -56,6 +57,7 @@ class RecipeController extends Controller
      */
     public function show($id)
     {
+
         $recipe = new RecipeService();
         $data = $recipe->getRecipe($id);
         return response()->json($data);
@@ -75,13 +77,19 @@ class RecipeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request request to update
+     * @param int                      $uid     unique id to recipe
+     * 
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRecipe $request, $uid)
     {
-        //
+        
+        $recipe = new RecipeService();
+        
+        $data = $recipe->updateRecipe($uid, $request->all());
+
+        return response()->json($data);
     }
 
     /**
