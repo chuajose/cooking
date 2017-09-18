@@ -52,6 +52,7 @@ class RecipeService extends IngredientService
         $this->recipe->name = $data->name;
         $this->recipe->description = $data->description;
         $this->recipe->difficulty = $data->difficulty;
+        $this->recipe->course = $data->course;
         $this->recipe->calories = ($data->calories )? $data->calories : null;
         $this->recipe->duration = ($data->duration )? $data->duration : null;
         

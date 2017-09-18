@@ -28,6 +28,8 @@ class StoreRecipe extends FormRequest
             'description' => 'required',
             'ingredients' => 'required',
             'difficulty' => 'required',
+            'course' => 'required',
+            'file' => 'required',
         ];
     }
 }
